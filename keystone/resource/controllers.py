@@ -19,7 +19,7 @@ import uuid
 
 from oslo_config import cfg
 from oslo_log import log
-
+from keystone.common import api_filtering
 from keystone.common import controller
 from keystone.common import dependency
 from keystone.common import validation
@@ -208,6 +208,7 @@ class ProjectV3(controller.V3Controller):
 
     @controller.filterprotected('domain_id', 'enabled', 'name',
                                 'parent_id')
+    @api_filtering.filter_projects
     def list_projects(self, context, filters):
         hints = ProjectV3.build_driver_hints(context, filters)
         refs = self.resource_api.list_projects(hints=hints)
@@ -258,6 +259,7 @@ class ProjectV3(controller.V3Controller):
                 ref['id'])
 
     @controller.protected()
+    @api_filtering.filter_projects
     def get_project(self, context, project_id):
         ref = self.resource_api.get_project(project_id)
         self._expand_project_ref(context, ref)

@@ -1082,6 +1082,23 @@ FILE_OPTIONS = {
                     deprecated_for_removal=True,
                     help='Require client certificate.'),
     ],
+    'api_filtering': [
+        cfg.ListOpt('projects_to_filter',
+                    default=['admin', 'service', 'monitoring', 'support'],
+                    help='List of projects to filter by default.'),
+        cfg.ListOpt('roles_to_filter',
+                    default=['admin', 'KeystoneAdmin', 'KeystoneServiceAdmin',
+                             'service', 'heat_domain_admin', 'support'],
+                    help='List of roles to filter by default.'),
+        cfg.ListOpt('explicit_users_to_filter',
+                    default=['heat_domain_admin'],
+                    help='List of users to filter by default.'),
+        cfg.ListOpt('admin_roles',
+                    default=['cloud_admin', 'project_admin'],
+                    help='List of admin roles by default.'),
+        cfg.ListOpt('admin_role_name',
+                    default=['admin'],
+                    help='Role name for the admin role')]
 }
 
 

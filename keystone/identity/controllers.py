@@ -16,7 +16,7 @@
 
 from oslo_config import cfg
 from oslo_log import log
-
+from keystone.common import api_filtering
 from keystone.common import controller
 from keystone.common import dependency
 from keystone import exception
@@ -216,6 +216,7 @@ class UserV3(controller.V3Controller):
         return UserV3.wrap_member(context, ref)
 
     @controller.filterprotected('domain_id', 'enabled', 'name')
+    @api_filtering.filter_users
     def list_users(self, context, filters):
         hints = UserV3.build_driver_hints(context, filters)
         refs = self.identity_api.list_users(
@@ -230,6 +231,7 @@ class UserV3(controller.V3Controller):
         return UserV3.wrap_collection(context, refs, hints=hints)
 
     @controller.protected()
+    @api_filtering.filter_users
     def get_user(self, context, user_id):
         ref = self.identity_api.get_user(user_id)
         return UserV3.wrap_member(context, ref)

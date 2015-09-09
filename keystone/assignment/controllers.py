@@ -24,6 +24,7 @@ from oslo_log import log
 from six.moves import urllib
 
 from keystone.assignment import schema
+from keystone.common import api_filtering
 from keystone.common import controller
 from keystone.common import dependency
 from keystone.common import validation
@@ -87,7 +88,6 @@ class TenantAssignment(controller.V2Controller):
             else:
                 user_refs.append(self.v3_to_v2_user(user_ref))
         return {'users': user_refs}
-
 
 @dependency.requires('assignment_api', 'role_api')
 class Role(controller.V2Controller):
@@ -304,6 +304,7 @@ class RoleV3(controller.V3Controller):
         return RoleV3.wrap_member(context, ref)
 
     @controller.filterprotected('name')
+    @api_filtering.filter_roles
     def list_roles(self, context, filters):
         hints = RoleV3.build_driver_hints(context, filters)
         refs = self.role_api.list_roles(
@@ -311,6 +312,7 @@ class RoleV3(controller.V3Controller):
         return RoleV3.wrap_collection(context, refs, hints=hints)
 
     @controller.protected()
+    @api_filtering.filter_roles
     def get_role(self, context, role_id):
         ref = self.role_api.get_role(role_id)
         return RoleV3.wrap_member(context, ref)
